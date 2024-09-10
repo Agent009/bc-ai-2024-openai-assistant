@@ -1,12 +1,21 @@
 {
-  "name": "assistants-nextjs",
+  "name": "openai-assistants",
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "format": "prettier --check \"**/*.[jt]s?(x)\"",
+    "format:fix": "prettier --write \"**/*.[jt]s?(x)\"",
+    "lint": "eslint ./src",
+    "lint:fix": "eslint ./src --fix",
     "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
+    "build:local": "NEXT_PUBLIC_APP_ENV=local next build",
+    "build:dev": "NEXT_PUBLIC_APP_ENV=dev next build",
+    "build:prod": "NEXT_PUBLIC_APP_ENV=prod next build",
+    "deploy:local": "npm run build:local && pm2 start pm2.config.js --env local --no-daemon",
+    "deploy:dev": "npm run build:dev && pm2 start pm2.config.js --env dev",
+    "deploy:prod": "npm run build:prod && pm2 start pm2.config.js --env prod",
+    "dev": " next dev -p 3091 --turbo",
+    "start": "next start -p 3091"
   },
   "dependencies": {
     "next": "14.1.4",
@@ -16,11 +25,35 @@
     "react-markdown": "^9.0.1"
   },
   "devDependencies": {
-    "@types/node": "20.12.7",
-    "@types/react": "18.2.79",
-    "typescript": "5.4.5"
+    "@eslint/js": "^9.2.0",
+    "@types/node": "^20",
+    "@types/react": "^18",
+    "@types/react-dom": "^18",
+    "eslint": "^8",
+    "eslint-config-neon": "^0.1.62",
+    "eslint-config-next": "^14.2.6",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.1.3",
+    "eslint-plugin-react": "^7.34.1",
+    "globals": "^15.1.0",
+    "husky": "^9.0.11",
+    "lint-staged": "^15.2.2",
+    "postcss": "^8",
+    "prettier": "^3.2.5",
+    "prettier-plugin-tailwindcss": "^0.5.14",
+    "tailwindcss": "^3.4.10",
+    "tailwindcss-animate": "^1.0.7",
+    "typescript": "^5",
+    "typescript-eslint": "^7.8.0"
   },
-  "prettier": {
-    "singleQuote": false
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "src/**/*.{js,jsx,ts,tsx,json,css,scss,md}": [
+      "prettier --write \"**/*.[jt]s?(x)\""
+    ]
   }
 }
