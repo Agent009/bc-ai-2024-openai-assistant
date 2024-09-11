@@ -60,7 +60,7 @@ const Chat = ({
   functionCallHandler = () => Promise.resolve(""), // default to return empty string
 }: ChatProps) => {
   const [userInput, setUserInput] = useState("");
-  const [messages, setMessages] = useState([]);
+  const [messages, setMessages] = useState<MessageProps[]>([]);
   const [inputDisabled, setInputDisabled] = useState(false);
   const [threadId, setThreadId] = useState("");
   console.log("components -> chat -> init -> threadId", threadId);
@@ -115,11 +115,11 @@ const Chat = ({
     handleReadableStream(stream);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!userInput.trim()) return;
     sendMessage(userInput);
-    setMessages((prevMessages) => [...prevMessages, { role: "user", text: userInput }]);
+    setMessages((prevMessages: MessageProps[]) => [...prevMessages, { role: "user", text: userInput }]);
     setUserInput("");
     setInputDisabled(true);
     scrollToBottom();
@@ -220,19 +220,22 @@ const Chat = ({
   };
 
   const appendMessage = (role: "user" | "assistant" | "code", text: string) => {
-    setMessages((prevMessages) => [...prevMessages, { role, text }]);
+    setMessages((prevMessages: MessageProps[]) => [...prevMessages, { role, text }]);
   };
 
-  const annotateLastMessage = (annotations) => {
-    setMessages((prevMessages) => {
+  const annotateLastMessage = (annotations: unknown[]) => {
+    setMessages((prevMessages: MessageProps[]) => {
       const lastMessage = prevMessages[prevMessages.length - 1];
       const updatedLastMessage = {
         ...lastMessage,
       };
-      annotations.forEach((annotation) => {
+      annotations.forEach((annotation: unknown) => {
+        // @ts-expect-error - ignoring TypeScript error for annotation type
         if (annotation.type === "file_path") {
           updatedLastMessage.text = updatedLastMessage.text.replaceAll(
+            // @ts-expect-error - ignoring TypeScript error for annotation type
             annotation.text,
+            // @ts-expect-error - ignoring TypeScript error for annotation type
             `/api/files/${annotation.file_path.file_id}`,
           );
         }
