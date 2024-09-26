@@ -1,6 +1,8 @@
-# Encode_AI-and-GPT-Bootcamp-Q3-2024
+# Chat Application with OpenAI Assistants - RAG + Function Calls
 
-Create an assistant, provide a file for information retrieval, and test it with a message thread.
+* AI assistant that processes attached files for information retrieval, and answers based on knowledge obtained from it.
+* Implementation of **Retrieval Augmented Generation (RAG)** techniques for operating on provided data.
+* Includes **function calling** (**tools**) support.
 
 ## Instructions / README
 
